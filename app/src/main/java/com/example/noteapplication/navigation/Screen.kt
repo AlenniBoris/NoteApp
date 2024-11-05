@@ -5,5 +5,5 @@ sealed class Screen(
 ){
     data object Home: Screen("homescreen")
     data object Details: Screen("detailsscreen/")
-    data object Add: Screen("addscreen")
+    data object Refactor: Screen("refactorscreen")
 }

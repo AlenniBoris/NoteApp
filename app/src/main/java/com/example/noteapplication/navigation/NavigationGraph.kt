@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.noteapplication.presentation.add.views.AddScreen
+import com.example.noteapplication.presentation.add.views.RefactorScreen
 import com.example.noteapplication.presentation.details.views.DetailsScreen
 import com.example.noteapplication.presentation.home.views.HomeScreen
 
@@ -18,7 +18,7 @@ fun NavigationGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Route.HomeRoute.route,
+        startDestination = Screen.Home.route,
         modifier = Modifier.padding(pd)
     ){
 
@@ -28,8 +28,8 @@ fun NavigationGraph(
             )
         }
 
-        composable(Route.AddScreen.route){
-            AddScreen(
+        composable(Route.RefactorScreen.route){
+            RefactorScreen(
                 navController = navController
             )
         }

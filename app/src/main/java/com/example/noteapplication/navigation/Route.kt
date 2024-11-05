@@ -5,5 +5,5 @@ sealed class Route(
 ) {
     data object HomeRoute: Route("homescreen")
     data object DetailsRoute: Route("detailsscreen/{id}")
-    data object AddScreen: Route("addscreen")
+    data object RefactorScreen: Route("refactorscreen")
 }

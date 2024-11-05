@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.noteapplication.navigation.NavigationGraph
-import com.example.noteapplication.ui.theme.NoteApplicationTheme
+import com.example.noteapplication.presentation.uikit.theme.NoteApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
