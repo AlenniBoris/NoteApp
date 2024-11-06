@@ -17,7 +17,7 @@ interface NotesDatabaseDao {
     @Delete
     suspend fun deleteNoteFromDatabase(noteEntity: NoteEntity)
 
-    @Query("SELECT * FROM `notes-database` WHERE id=:id")
+    @Query("SELECT * FROM `notes-database` WHERE noteId=:id")
     suspend fun getNoteFromDatabaseById(id: Int): NoteEntity
 
     @Query("SELECT * FROM `notes-database`")
@@ -28,5 +28,8 @@ interface NotesDatabaseDao {
 
     @Update(entity = NoteEntity::class)
     suspend fun updateExistingNote(updatedNote: NoteEntity)
+
+    @Query("DELETE FROM `notes-database`")
+    suspend fun deleteAllNotes()
 
 }

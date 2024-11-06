@@ -5,18 +5,20 @@ import com.example.noteapplication.domain.model.Note
 
 fun NoteEntity.asNote(): Note{
     return Note(
-        id = this.id,
+        noteId = this.noteId,
         priority = this.priority,
         title = this.title,
-        content = this.content
+        content = this.content,
+        contentPreview = this.contentPreview
     )
 }
 
 fun Note.asNoteEntity(): NoteEntity{
     return NoteEntity(
-        id = this.id,
+        noteId = this.noteId,
         priority = this.priority,
         title = this.title,
-        content = this.content
+        content = this.content,
+        contentPreview = this.contentPreview
     )
 }

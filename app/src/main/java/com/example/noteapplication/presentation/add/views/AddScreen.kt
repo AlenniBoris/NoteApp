@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 
 @Composable
-fun RefactorScreen(
+fun AddScreen(
     navController: NavHostController
 ){
     Column(

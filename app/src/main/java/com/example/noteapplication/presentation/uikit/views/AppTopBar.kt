@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
@@ -32,6 +33,9 @@ fun AppTopBar(
 
     needsDeclineButton: Boolean,
     onDeclineButtonClicked: () -> Unit,
+
+    needsDeleteAllButton: Boolean,
+    onDeleteAllButtonClicked: () -> Unit
 ) {
 
     Row(
@@ -49,6 +53,7 @@ fun AppTopBar(
                 )
             }
         }
+
 
         if (needsSortButton) {
             IconButton(
@@ -90,6 +95,17 @@ fun AppTopBar(
                 Icon(
                     imageVector = Icons.Filled.Clear,
                     contentDescription = "Icon decline"
+                )
+            }
+        }
+
+        if (needsDeleteAllButton) {
+            IconButton(
+                onClick = onDeleteAllButtonClicked
+            ){
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Icon delete"
                 )
             }
         }
