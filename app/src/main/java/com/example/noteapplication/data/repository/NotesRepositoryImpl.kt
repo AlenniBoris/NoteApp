@@ -1,5 +1,6 @@
 package com.example.noteapplication.data.repository
 
+import android.util.Log
 import com.example.noteapplication.data.mappers.asNote
 import com.example.noteapplication.data.mappers.asNoteEntity
 import com.example.noteapplication.data.source.dao.database.NotesDatabase
@@ -24,11 +25,15 @@ class NotesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getNoteFromDatabaseById(id: Int): GeneralNote {
-        return try {
+        val returned = try {
             database.dao.getNoteFromDatabaseById(id).asNote()
         } catch (e: Exception){
             ExceptionNote(e.message.toString())
         }
+
+        Log.d("RETURNED", returned.toString())
+
+        return returned
     }
 
     override suspend fun getAllNotesFromDatabase(): List<GeneralNote> {

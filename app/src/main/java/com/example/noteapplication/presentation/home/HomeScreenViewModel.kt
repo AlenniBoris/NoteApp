@@ -93,8 +93,40 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun deleteNoteBySwipe(noteToDelete: Note){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             deleteNoteUseCase.invoke(noteToDelete)
+            onItemCollapsed(noteToDelete.noteId)
+            getNotesInternal(false)
+        }
+    }
+
+    fun checkIfCardIsInRevealed(nodeId: String): Boolean{
+        return screenState.value.listOfRevealedNotesIds.contains(nodeId)
+    }
+
+    fun onItemExpanded(nodeId: String){
+        if (checkIfCardIsInRevealed(nodeId)) return
+
+        val oldListUpdated = screenState.value.listOfRevealedNotesIds.toMutableList().also {
+            it.add(nodeId)
+        }
+        screenState.update { state ->
+            state.copy(
+                listOfRevealedNotesIds = oldListUpdated
+            )
+        }
+    }
+
+    fun onItemCollapsed(nodeId: String) {
+        if (!checkIfCardIsInRevealed(nodeId)) return
+
+        val oldListUpdated = screenState.value.listOfRevealedNotesIds.toMutableList().also {
+            it.remove(nodeId)
+        }
+        screenState.update { state ->
+            state.copy(
+                listOfRevealedNotesIds = oldListUpdated
+            )
         }
     }
 
