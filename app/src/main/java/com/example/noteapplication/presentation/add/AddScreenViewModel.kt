@@ -53,7 +53,7 @@ class AddScreenViewModel @Inject constructor(
         val contentPreview = newContent.substring(0, newContent.length/2) + "..."
         val noteToAdd = Note(
             noteId = currentTime,
-            priority = screenState.value.newNotePriority,
+            priority = if(screenState.value.newNotePriority == 0) 3 else screenState.value.newNotePriority,
             title = screenState.value.newNoteTitle,
             content = screenState.value.newNoteContent,
             contentPreview = contentPreview
