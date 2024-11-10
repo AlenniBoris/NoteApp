@@ -30,7 +30,7 @@ class HomeScreenViewModel @Inject constructor(
     val screenState = MutableStateFlow(HomeScreenState())
 
     init {
-        getNotes(returnSorted = false)
+        getNotes(false)
     }
 
     fun getNotes(returnSorted: Boolean){
@@ -66,23 +66,35 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    fun actionOnSortedButton(){
+        if (!screenState.value.isAlreadySorted){
+            viewModelScope.launch {
+                getNotesInternal(true)
+            }
+            changeIsAlreadySorted(true)
+        }else{
+            viewModelScope.launch {
+                getNotesInternal(false)
+            }
+            changeIsAlreadySorted(false)
+        }
+    }
+
+
+    fun changeIsAlreadySorted(isSorted: Boolean){
+        screenState.update { state ->
+            state.copy(
+                isAlreadySorted = isSorted
+            )
+        }
+    }
+
     fun changeIsLoading(loading: Boolean){
         screenState.update { state ->
             state.copy(
                 notesAreLoading = loading
             )
         }
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun addNote(){
-        val currentTime = LocalDateTime.now()
-        viewModelScope.launch(Dispatchers.IO) {
-            addNoteUseCase.invoke(Note(noteId = currentTime.toString(), priority = 3, title = "1 title", content = "1 content", contentPreview = "contemt...."))
-            getNotesInternal(false)
-        }
-        Log.d("ADDED TIME", currentTime.toString())
     }
 
     fun deleteAllNotes(){

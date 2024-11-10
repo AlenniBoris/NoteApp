@@ -18,12 +18,12 @@ interface NotesDatabaseDao {
     suspend fun deleteNoteFromDatabase(noteEntity: NoteEntity)
 
     @Query("SELECT * FROM `notes-database` WHERE noteId=:id")
-    suspend fun getNoteFromDatabaseById(id: Int): NoteEntity
+    suspend fun getNoteFromDatabaseById(id: String): NoteEntity
 
     @Query("SELECT * FROM `notes-database`")
     suspend fun getAllNotesFromDatabase(): List<NoteEntity>
 
-    @Query("SELECT * FROM `notes-database` ORDER BY priority DESC")
+    @Query("SELECT * FROM `notes-database` ORDER BY priority ASC")
     suspend fun getAllNotesFromDatabaseSortedByPriority(): List<NoteEntity>
 
     @Update(entity = NoteEntity::class)

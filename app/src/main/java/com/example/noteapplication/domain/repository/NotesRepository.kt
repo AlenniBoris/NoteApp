@@ -9,7 +9,7 @@ interface NotesRepository {
 
     suspend fun deleteNoteFromDatabase(note: Note)
 
-    suspend fun getNoteFromDatabaseById(id: Int): GeneralNote
+    suspend fun getNoteFromDatabaseById(id: String): GeneralNote
 
     suspend fun getAllNotesFromDatabase(): List<GeneralNote>
 

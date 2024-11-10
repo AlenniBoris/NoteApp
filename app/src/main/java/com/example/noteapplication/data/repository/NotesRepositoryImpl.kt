@@ -24,7 +24,7 @@ class NotesRepositoryImpl @Inject constructor(
         database.dao.deleteNoteFromDatabase(note.asNoteEntity())
     }
 
-    override suspend fun getNoteFromDatabaseById(id: Int): GeneralNote {
+    override suspend fun getNoteFromDatabaseById(id: String): GeneralNote {
         val returned = try {
             database.dao.getNoteFromDatabaseById(id).asNote()
         } catch (e: Exception){

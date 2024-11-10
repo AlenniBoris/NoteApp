@@ -38,7 +38,7 @@ fun NavigationGraph(
             val arguments = requireNotNull(navBackStackEntry.arguments)
             DetailsScreen(
                 navController = navController,
-                id = arguments.getString("id")
+                id = arguments.getString("id") ?: ""
             )
         }
     }

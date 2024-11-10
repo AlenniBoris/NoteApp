@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,22 +34,23 @@ fun HomeScreen(
 
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.getNotes(false)
+    }
+
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         AppTopBar(
             needsAddButton = true,
             onAddButtonClicked = {
-                viewModel.addNote()
+                navController.navigate(Screen.Add.route)
             },
             needsSortButton = true,
-            onSortButtonClicked = {},
-            needsEditButton = true,
-            onEditButtonClicked = {},
-            needsAcceptButton = true,
-            onAcceptButtonClicked = {},
-            needsDeclineButton = true,
-            onDeclineButtonClicked = {},
+            onSortButtonClicked = {
+                viewModel.actionOnSortedButton()
+            },
             needsDeleteAllButton = true,
             onDeleteAllButtonClicked = {
                 viewModel.deleteAllNotes()

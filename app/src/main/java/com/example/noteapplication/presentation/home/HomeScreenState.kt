@@ -11,5 +11,6 @@ data class HomeScreenState(
     val notesAreLoading: Boolean = false,
     val noNotesFound: Boolean = false,
     val someErrorHappened: Boolean = false,
-    val errorMessage: String = ""
+    val errorMessage: String = "",
+    val isAlreadySorted: Boolean = false
 )
