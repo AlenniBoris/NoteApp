@@ -35,23 +35,40 @@ fun DetailsScreen(
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
     viewModel.getNoteById(id)
+//    if (state.userNote != null){
+//        viewModel.attachNewNoteValues()
+//    }
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
 
         AppTopBar(
-            needsBackButton = true,
+            needsBackButton = !state.isRefactoring,
             onBackButtonClicked = {
                 navController.popBackStack()
             },
-            needsEditButton = true,
-            onEditButtonClicked = {},
-            needsDeleteAllButton = true,
+            needsEditButton = !state.isRefactoring,
+            onEditButtonClicked = {
+                viewModel.actionOnRefactoringButton()
+            },
+            needsDeleteAllButton = !state.isRefactoring,
             onDeleteAllButtonClicked = {
                 val note = state.userNote
                 viewModel.deleteNote(note!!)
                 navController.popBackStack()
+            },
+            needsAcceptButton = state.isRefactoring,
+            onAcceptButtonClicked = {
+                viewModel.updateCurrentNote()
+            },
+            needsDeclineButton = state.isRefactoring,
+            onDeclineButtonClicked = {
+                viewModel.actionOnRefactoringButton()
+            },
+            needsPriorityButtons = state.isRefactoring,
+            onPriorityButtonClicked = { priority ->
+                viewModel.updateNotePriority(priority)
             }
         )
 
@@ -62,7 +79,9 @@ fun DetailsScreen(
                 .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp))
                 .background(
-                    when(state.userNote?.priority){
+                    when (
+                        if(!state.isRefactoring) state.userNote?.priority else state.newNotePriority
+                    ) {
                         1 -> Color.Red.copy(alpha = 0.55f)
                         2 -> Color.Yellow.copy(alpha = 0.55f)
                         3 -> Color.Green.copy(alpha = 0.55f)
@@ -74,18 +93,38 @@ fun DetailsScreen(
 
             Column{
 
-                Text(
-                    modifier = Modifier.padding(bottom = 15.dp).fillMaxWidth(),
-                    text = state.userNote?.title.toString(),
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 30.sp
-                )
+                if (!state.isRefactoring) {
+                    Text(
+                        modifier = Modifier
+                            .padding(bottom = 15.dp)
+                            .fillMaxWidth(),
+                        text = state.userNote?.title.toString(),
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 30.sp
+                    )
 
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = state.userNote?.content.toString(),
-                    fontSize = 20.sp
-                )
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = state.userNote?.content.toString(),
+                        fontSize = 20.sp
+                    )
+                } else {
+                    OutlinedTextField(
+                        value = state.newNoteTitle,
+                        onValueChange = { text -> viewModel.updateNoteTitleText(text) },
+                        label = { Text("Title") },
+                        modifier = Modifier
+                            .padding(vertical = 10.dp)
+                            .fillMaxWidth()
+                    )
+
+                    OutlinedTextField(
+                        value = state.newNoteContent,
+                        onValueChange = { text -> viewModel.updateNoteContentText(text) },
+                        label = { Text("Content") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
 
             }
         }

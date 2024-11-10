@@ -1,11 +1,14 @@
 package com.example.noteapplication.presentation.details
 
+import androidx.core.graphics.rotationMatrix
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.noteapplication.domain.model.ExceptionNote
 import com.example.noteapplication.domain.model.Note
+import com.example.noteapplication.domain.usecase.AddNoteUseCase
 import com.example.noteapplication.domain.usecase.DeleteNoteUseCase
 import com.example.noteapplication.domain.usecase.GetNoteByIdUseCase
+import com.example.noteapplication.domain.usecase.UpdateNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +19,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsScreenViewModel @Inject constructor(
     private val getNoteByIdUseCase: GetNoteByIdUseCase,
-    private val deleteNoteUseCase: DeleteNoteUseCase
+    private val deleteNoteUseCase: DeleteNoteUseCase,
+    private val updateNoteUseCase: UpdateNoteUseCase,
+    private val addNoteUseCase: AddNoteUseCase
 ) : ViewModel() {
 
     val screenState = MutableStateFlow(DetailsScreenState())
@@ -24,6 +29,17 @@ class DetailsScreenViewModel @Inject constructor(
     fun getNoteById(noteId: String){
         viewModelScope.launch(Dispatchers.IO) {
             getNoteByIdInternal(noteId)
+//            attachNewNoteValues()
+        }
+    }
+
+    fun attachNewNoteValues(){
+        screenState.update { state ->
+            state.copy(
+                newNoteTitle = screenState.value.userNote?.title.toString(),
+                newNoteContent = screenState.value.userNote?.content.toString(),
+                newNotePriority = screenState.value.userNote?.priority!!,
+            )
         }
     }
 
@@ -47,7 +63,10 @@ class DetailsScreenViewModel @Inject constructor(
         if (returnedNote is Note){
             screenState.update { state ->
                 state.copy(
-                    userNote = returnedNote
+                    userNote = returnedNote,
+//                    newNoteTitle = returnedNote.title,
+//                    newNoteContent = returnedNote.content,
+//                    newNotePriority = returnedNote.priority
                 )
             }
         }
@@ -67,4 +86,61 @@ class DetailsScreenViewModel @Inject constructor(
         }
     }
 
+    fun actionOnRefactoringButton(){
+        if (screenState.value.isRefactoring){
+            changeIsRefactoring(false)
+        } else {
+            changeIsRefactoring(true)
+        }
+    }
+
+    private fun changeIsRefactoring(isRefactoring: Boolean){
+        screenState.update { state ->
+            state.copy(
+                isRefactoring = isRefactoring
+            )
+        }
+    }
+
+    fun updateCurrentNote(){
+        val newContent = screenState.value.newNoteContent
+        val contentPreview = newContent.substring(0, newContent.length/2) + "..."
+        val updatedNote = Note(
+            noteId = screenState.value.userNote?.noteId.toString(),
+            priority = if(screenState.value.newNotePriority == 0) 3 else screenState.value.newNotePriority,
+            title = screenState.value.newNoteTitle,
+            content = screenState.value.newNoteContent,
+            contentPreview = contentPreview
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+//            updateNoteUseCase.invoke(updatedNote)
+            addNoteUseCase.invoke(noteToAdd = updatedNote)
+            getNoteByIdInternal(screenState.value.userNote?.noteId.toString())
+        }
+        actionOnRefactoringButton()
+    }
+
+    fun updateNoteTitleText(text: String){
+        screenState.update { state ->
+            state.copy(
+                newNoteTitle = text
+            )
+        }
+    }
+
+    fun updateNoteContentText(text: String){
+        screenState.update { state ->
+            state.copy(
+                newNoteContent = text
+            )
+        }
+    }
+
+    fun updateNotePriority(priority: Int){
+        screenState.update { state ->
+            state.copy(
+                newNotePriority = priority
+            )
+        }
+    }
 }

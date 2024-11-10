@@ -1,6 +1,7 @@
 package com.example.noteapplication.presentation.home.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +17,10 @@ import androidx.compose.ui.unit.sp
 import com.example.noteapplication.domain.model.Note
 
 @Composable
-fun NoteItemContent(note: Note){
+fun NoteItemContent(
+    note: Note,
+    onClick: () -> Unit
+){
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -27,7 +31,8 @@ fun NoteItemContent(note: Note){
                     else -> Color.Green.copy(alpha = 0.55f)
                 }
             )
-            .padding(horizontal = 20.dp, vertical = 15.dp),
+            .padding(horizontal = 20.dp, vertical = 15.dp)
+            .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

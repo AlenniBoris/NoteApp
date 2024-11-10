@@ -52,7 +52,6 @@ fun NoteItem(
 
     Card(
         modifier = Modifier
-            .clickable { onClick() }
             .clip(RoundedCornerShape(30.dp))
             .offset { IntOffset((offsetX + offsetTransition).roundToInt(), 0) }
             .pointerInput(Unit) {
@@ -72,7 +71,7 @@ fun NoteItem(
                 }
             },
         content = {
-            NoteItemContent(note)
+            NoteItemContent(note, onClick)
         }
     )
 
