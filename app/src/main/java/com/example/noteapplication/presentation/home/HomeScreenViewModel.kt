@@ -21,7 +21,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    private val addNoteUseCase: AddNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val getAllNotesUseCase: GetAllNotesUseCase,
     private val deleteAllNotesUseCase: DeleteAllNotesUseCase

@@ -21,7 +21,6 @@ import javax.inject.Inject
 class DetailsScreenViewModel @Inject constructor(
     private val getNoteByIdUseCase: GetNoteByIdUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
-    private val updateNoteUseCase: UpdateNoteUseCase,
     private val addNoteUseCase: AddNoteUseCase
 ) : ViewModel() {
 
@@ -30,17 +29,6 @@ class DetailsScreenViewModel @Inject constructor(
     fun getNoteById(noteId: String){
         viewModelScope.launch(Dispatchers.IO) {
             getNoteByIdInternal(noteId)
-//            attachNewNoteValues()
-        }
-    }
-
-    fun attachNewNoteValues(){
-        screenState.update { state ->
-            state.copy(
-                newNoteTitle = screenState.value.userNote?.title.toString(),
-                newNoteContent = screenState.value.userNote?.content.toString(),
-                newNotePriority = screenState.value.userNote?.priority!!,
-            )
         }
     }
 
@@ -71,7 +59,6 @@ class DetailsScreenViewModel @Inject constructor(
             updateNoteTitleText(returnedNote.title)
             updateNoteContentText(returnedNote.content)
             updateNotePriority(returnedNote.priority)
-            Log.d("EXECUTED", "EXECuTED internal")
         }
     }
 
@@ -116,10 +103,8 @@ class DetailsScreenViewModel @Inject constructor(
             contentPreview = contentPreview
         )
         viewModelScope.launch(Dispatchers.IO) {
-//            updateNoteUseCase.invoke(updatedNote)
             addNoteUseCase.invoke(noteToAdd = updatedNote)
             getNoteByIdInternal(screenState.value.userNote?.noteId.toString())
-            Log.d("EXECUTED", "Update current")
         }
         actionOnRefactoringButton()
     }
