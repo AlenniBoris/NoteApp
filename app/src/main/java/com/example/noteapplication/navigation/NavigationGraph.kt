@@ -18,7 +18,7 @@ fun NavigationGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Route.HomeRoute.route,
+        startDestination = Screen.Home.route,
         modifier = Modifier.padding(pd)
     ){
 
@@ -38,7 +38,7 @@ fun NavigationGraph(
             val arguments = requireNotNull(navBackStackEntry.arguments)
             DetailsScreen(
                 navController = navController,
-                id = arguments.getString("id")
+                id = arguments.getString("id") ?: ""
             )
         }
     }
