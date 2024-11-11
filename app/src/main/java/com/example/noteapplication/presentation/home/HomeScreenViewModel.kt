@@ -80,7 +80,6 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-
     fun changeIsAlreadySorted(isSorted: Boolean){
         screenState.update { state ->
             state.copy(

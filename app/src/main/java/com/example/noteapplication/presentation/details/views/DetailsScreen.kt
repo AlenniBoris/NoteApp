@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,10 +35,10 @@ fun DetailsScreen(
 
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
-    viewModel.getNoteById(id)
-//    if (state.userNote != null){
-//        viewModel.attachNewNoteValues()
-//    }
+    LaunchedEffect(Unit) {
+        viewModel.getNoteById(id)
+    }
+
 
     Column(
         modifier = Modifier.fillMaxSize()

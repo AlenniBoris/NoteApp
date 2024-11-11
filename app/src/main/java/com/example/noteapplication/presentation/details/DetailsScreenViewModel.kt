@@ -1,5 +1,6 @@
 package com.example.noteapplication.presentation.details
 
+import android.util.Log
 import androidx.core.graphics.rotationMatrix
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -64,11 +65,13 @@ class DetailsScreenViewModel @Inject constructor(
             screenState.update { state ->
                 state.copy(
                     userNote = returnedNote,
-//                    newNoteTitle = returnedNote.title,
-//                    newNoteContent = returnedNote.content,
-//                    newNotePriority = returnedNote.priority
                 )
             }
+
+            updateNoteTitleText(returnedNote.title)
+            updateNoteContentText(returnedNote.content)
+            updateNotePriority(returnedNote.priority)
+            Log.d("EXECUTED", "EXECuTED internal")
         }
     }
 
@@ -116,6 +119,7 @@ class DetailsScreenViewModel @Inject constructor(
 //            updateNoteUseCase.invoke(updatedNote)
             addNoteUseCase.invoke(noteToAdd = updatedNote)
             getNoteByIdInternal(screenState.value.userNote?.noteId.toString())
+            Log.d("EXECUTED", "Update current")
         }
         actionOnRefactoringButton()
     }
