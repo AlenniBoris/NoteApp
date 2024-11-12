@@ -5,5 +5,6 @@ data class Note(
     val priority: Int,
     val title: String,
     val content: String,
-    val contentPreview: String
+    val contentPreview: String,
+    val isPinned: Boolean
 ) : GeneralNote()

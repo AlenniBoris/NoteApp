@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.Dp
 fun ActionsRow(
     actionIconSize: Dp,
     onDelete: () -> Unit,
-    onEdit: () -> Unit,
     onPin: () -> Unit
 ){
     Row{
@@ -29,16 +28,6 @@ fun ActionsRow(
             Icon(
                 imageVector = Icons.Filled.Delete,
                 contentDescription = "Icon delete"
-            )
-        }
-
-        IconButton(
-            onClick = onEdit,
-            modifier = Modifier.size(actionIconSize)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Edit,
-                contentDescription = "Icon edit"
             )
         }
 

@@ -13,8 +13,6 @@ interface NotesRepository {
 
     suspend fun getAllNotesFromDatabase(): List<GeneralNote>
 
-    suspend fun getAllNotesFromDatabaseSortedByPriority(): List<GeneralNote>
-
     suspend fun updateExistingNote(updatedNote: Note)
 
     suspend fun deleteAllNotes()

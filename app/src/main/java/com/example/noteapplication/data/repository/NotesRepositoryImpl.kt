@@ -44,14 +44,6 @@ class NotesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllNotesFromDatabaseSortedByPriority(): List<GeneralNote> {
-        return try {
-            database.dao.getAllNotesFromDatabaseSortedByPriority().map { it.asNote() }
-        } catch (e: Exception){
-            listOf(ExceptionNote(e.message.toString()))
-        }
-    }
-
     override suspend fun updateExistingNote(updatedNote: Note) {
         database.dao.updateExistingNote(updatedNote.asNoteEntity())
     }
