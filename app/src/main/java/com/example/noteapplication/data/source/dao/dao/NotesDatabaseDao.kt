@@ -20,7 +20,7 @@ interface NotesDatabaseDao {
     @Query("SELECT * FROM `notes-database` WHERE noteId=:id")
     suspend fun getNoteFromDatabaseById(id: String): NoteEntity
 
-    @Query("SELECT * FROM `notes-database` ORDER BY isPinned ASC")
+    @Query("SELECT * FROM `notes-database` ORDER BY isPinned DESC")
     suspend fun getAllNotesFromDatabase(): List<NoteEntity>
 
     @Update(entity = NoteEntity::class)

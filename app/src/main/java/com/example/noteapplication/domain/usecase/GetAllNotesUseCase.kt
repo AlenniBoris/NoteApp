@@ -18,7 +18,9 @@ class GetAllNotesUseCase @Inject constructor(
 
     private fun returnNeededList(list: List<GeneralNote>, returnSorted: Boolean): List<GeneralNote>{
         return if (returnSorted && (list[0] !is ExceptionNote)){
-            list.sortedBy { (it as Note).priority }
+            val pinnedList = list.filter { (it as Note).isPinned }
+            val notPinnedSorted = list.filter { !(it as Note).isPinned }.sortedBy { (it as Note).priority }
+            pinnedList + notPinnedSorted
         }else{
             list
         }
