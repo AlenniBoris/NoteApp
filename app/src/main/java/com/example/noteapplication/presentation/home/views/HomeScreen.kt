@@ -87,7 +87,8 @@ fun HomeScreen(
                             },
                             onPin = {
                                 viewModel.actionOnPinClicked(note)
-                            }
+                            },
+                            noteISPinned = note.isPinned
                         )
 
                         NoteItem(
