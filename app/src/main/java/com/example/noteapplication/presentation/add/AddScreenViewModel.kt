@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.noteapplication.domain.model.AttachedFile
 import com.example.noteapplication.domain.usecase.AddNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,6 +45,14 @@ class AddScreenViewModel @Inject constructor(
                 newNotePriority = priority
             )
         }
+    }
+
+    fun addAttachedFile(filePath: String, fileName: String){
+
+    }
+
+    fun removeAttachedFile(attachedFile: AttachedFile){
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
