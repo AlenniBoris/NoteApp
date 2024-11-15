@@ -12,14 +12,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import com.example.noteapplication.R
 
 @Composable
 fun ActionsRow(
     actionIconSize: Dp,
     onDelete: () -> Unit,
-    onEdit: () -> Unit,
-    onPin: () -> Unit
+    onPin: () -> Unit,
+    noteISPinned: Boolean
 ){
     Row{
         IconButton(
@@ -33,21 +35,13 @@ fun ActionsRow(
         }
 
         IconButton(
-            onClick = onEdit,
-            modifier = Modifier.size(actionIconSize)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Edit,
-                contentDescription = "Icon edit"
-            )
-        }
-
-        IconButton(
             onClick = onPin,
             modifier = Modifier.size(actionIconSize)
         ) {
             Icon(
-                imageVector = Icons.Filled.Lock,
+                painter = if(noteISPinned)
+                    painterResource(R.drawable.baseline_lock_outline_24)
+                else painterResource(R.drawable.baseline_lock_open_24),
                 contentDescription = "Icon pin"
             )
         }

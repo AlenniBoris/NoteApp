@@ -2,6 +2,7 @@ package com.example.noteapplication.data.mappers
 
 import com.example.noteapplication.data.source.dao.model.NoteEntity
 import com.example.noteapplication.domain.model.Note
+import kotlin.concurrent.thread
 
 fun NoteEntity.asNote(): Note{
     return Note(
@@ -9,7 +10,8 @@ fun NoteEntity.asNote(): Note{
         priority = this.priority,
         title = this.title,
         content = this.content,
-        contentPreview = this.contentPreview
+        contentPreview = this.contentPreview,
+        isPinned = this.isPinned
     )
 }
 
@@ -19,6 +21,7 @@ fun Note.asNoteEntity(): NoteEntity{
         priority = this.priority,
         title = this.title,
         content = this.content,
-        contentPreview = this.contentPreview
+        contentPreview = this.contentPreview,
+        isPinned = this.isPinned
     )
 }

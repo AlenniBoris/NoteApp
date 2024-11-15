@@ -56,7 +56,8 @@ class AddScreenViewModel @Inject constructor(
             priority = if(screenState.value.newNotePriority == 0) 3 else screenState.value.newNotePriority,
             title = screenState.value.newNoteTitle,
             content = screenState.value.newNoteContent,
-            contentPreview = contentPreview
+            contentPreview = contentPreview,
+            isPinned = false
         )
         viewModelScope.launch(Dispatchers.IO) {
             addNoteUseCase.invoke(noteToAdd)

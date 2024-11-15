@@ -85,14 +85,16 @@ fun HomeScreen(
                             onDelete = {
                                 viewModel.deleteNoteBySwipe(note)
                             },
-                            onEdit = {},
-                            onPin = {}
+                            onPin = {
+                                viewModel.actionOnPinClicked(note)
+                            },
+                            noteISPinned = note.isPinned
                         )
 
                         NoteItem(
                             note = note,
                             isRevealed = viewModel.checkIfCardIsInRevealed(note.noteId),
-                            noteOffset = 340f,
+                            noteOffset = 220f,
                             onExpand = { viewModel.onItemExpanded(note.noteId) },
                             onCollapse = { viewModel.onItemCollapsed(note.noteId) },
                             onClick = {

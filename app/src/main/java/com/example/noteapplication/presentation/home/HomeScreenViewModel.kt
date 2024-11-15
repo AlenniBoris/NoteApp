@@ -23,7 +23,8 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val getAllNotesUseCase: GetAllNotesUseCase,
-    private val deleteAllNotesUseCase: DeleteAllNotesUseCase
+    private val deleteAllNotesUseCase: DeleteAllNotesUseCase,
+    private val addNoteUseCase: AddNoteUseCase
 ): ViewModel(){
 
     val screenState = MutableStateFlow(HomeScreenState())
@@ -137,6 +138,16 @@ class HomeScreenViewModel @Inject constructor(
             state.copy(
                 listOfRevealedNotesIds = oldListUpdated
             )
+        }
+    }
+
+    fun actionOnPinClicked(noteToPin: Note){
+        val updatedNote = noteToPin.copy(
+            isPinned = !noteToPin.isPinned
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            addNoteUseCase.invoke(noteToAdd = updatedNote)
+            getNotesInternal(screenState.value.isAlreadySorted)
         }
     }
 

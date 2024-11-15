@@ -14,7 +14,8 @@ data class NoteEntity(
     val title: String,
     @ColumnInfo(name = "note-content")
     val content: String,
-    val contentPreview: String
+    val contentPreview: String,
+    val isPinned: Boolean
 ){
 
 }
