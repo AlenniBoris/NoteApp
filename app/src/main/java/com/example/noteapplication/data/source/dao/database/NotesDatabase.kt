@@ -8,8 +8,8 @@ import com.example.noteapplication.data.source.dao.model.NoteEntity
 
 @Database(
     entities = [NoteEntity::class, AttachedFileEntity::class],
-    version = 2,
-    exportSchema = true
+    version = 1,
+    exportSchema = false
 )
 abstract class NotesDatabase : RoomDatabase() {
     abstract val dao: NotesDatabaseDao

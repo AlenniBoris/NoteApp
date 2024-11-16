@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -25,20 +24,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.noteapplication.presentation.details.DetailsScreenViewModel
 import com.example.noteapplication.presentation.uikit.views.AppTopBar
+import com.example.noteapplication.presentation.uikit.views.AttachedFilesRow
 
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
-    id: String,
+    noteId: String,
     viewModel: DetailsScreenViewModel = hiltViewModel()
 ){
 
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getNoteById(id)
+        viewModel.getNoteById(noteId)
     }
 
+    if (!state.someErrorHappened){
+        viewModel.getAllAttachedFiles(noteId)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -126,6 +129,19 @@ fun DetailsScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
+
+                AttachedFilesRow(
+                    attachedFilesList =
+                        if (state.isRefactoring) state.newAttachedFiles
+                        else state.attachedFiles,
+                    isInRefactoringMode = state.isRefactoring,
+                    onDetachAction = { attachedFile ->
+                        viewModel.removeAttachedFile(attachedFile)
+                    },
+                    onAttachAction = { filePath, fileName ->
+                        viewModel.addAttachedFile(filePath, fileName)
+                    }
+                )
 
             }
         }

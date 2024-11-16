@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -22,9 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.example.noteapplication.domain.usecase.GetNoteByIdUseCase
 import com.example.noteapplication.presentation.add.AddScreenViewModel
 import com.example.noteapplication.presentation.uikit.views.AppTopBar
+import com.example.noteapplication.presentation.uikit.views.AttachedFilesRow
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -88,8 +87,21 @@ fun AddScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+
+                AttachedFilesRow(
+                    attachedFilesList = state.attachedFilesList,
+                    onDetachAction = { attachedFile ->
+                        viewModel.removeAttachedFile(attachedFile)
+                    },
+                    onAttachAction = { filePath, fileName ->
+                        viewModel.addAttachedFile(filePath, fileName)
+                    },
+                    isInRefactoringMode = true
+                )
+
             }
         }
 
     }
 }
+

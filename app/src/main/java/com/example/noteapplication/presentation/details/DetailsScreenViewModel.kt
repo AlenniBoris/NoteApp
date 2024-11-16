@@ -4,10 +4,13 @@ import android.util.Log
 import androidx.core.graphics.rotationMatrix
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.noteapplication.domain.model.AttachedFile
 import com.example.noteapplication.domain.model.ExceptionNote
 import com.example.noteapplication.domain.model.Note
+import com.example.noteapplication.domain.usecase.AddAttachedFilesUseCase
 import com.example.noteapplication.domain.usecase.AddNoteUseCase
 import com.example.noteapplication.domain.usecase.DeleteNoteUseCase
+import com.example.noteapplication.domain.usecase.GetAttachedFilesUseCase
 import com.example.noteapplication.domain.usecase.GetNoteByIdUseCase
 import com.example.noteapplication.domain.usecase.UpdateNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +24,9 @@ import javax.inject.Inject
 class DetailsScreenViewModel @Inject constructor(
     private val getNoteByIdUseCase: GetNoteByIdUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
-    private val addNoteUseCase: AddNoteUseCase
+    private val addNoteUseCase: AddNoteUseCase,
+    private val getAttachedFilesUseCase: GetAttachedFilesUseCase,
+    private val addAttachedFilesUseCase: AddAttachedFilesUseCase
 ) : ViewModel() {
 
     val screenState = MutableStateFlow(DetailsScreenState())
@@ -32,13 +37,66 @@ class DetailsScreenViewModel @Inject constructor(
         }
     }
 
+    fun getAllAttachedFiles(noteId: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            getAttachedFilesInternal(noteId)
+        }
+    }
+
+    suspend fun getAttachedFilesInternal(noteId: String){
+        val files = getAttachedFilesUseCase.invoke(noteId)
+        screenState.update { state ->
+            state.copy(
+                attachedFiles = files
+            )
+        }
+
+        updateNoteAttachedFiles(files)
+    }
+
+    fun updateNoteAttachedFiles(files: List<AttachedFile>){
+        screenState.update { state ->
+            state.copy(
+                newAttachedFiles = files
+            )
+        }
+    }
+
+    fun addAttachedFile(filePath: String, fileName: String){
+        val newFile = AttachedFile(
+            noteId = "",
+            filePath = filePath,
+            fileName = fileName
+        )
+        val newList = screenState.value.newAttachedFiles.toMutableList() + newFile
+        Log.d("NEW ATTACHED SIZE =", "add = ${screenState.value.newAttachedFiles.size}")
+        updateNoteAttachedFiles(newList)
+    }
+
+    fun removeAttachedFile(attachedFile: AttachedFile){
+        val newList = screenState.value.newAttachedFiles.toMutableList() - attachedFile
+        Log.d("NEW ATTACHED SIZE =", "remove = ${screenState.value.newAttachedFiles.size}")
+        updateNoteAttachedFiles(newList)
+    }
+
+    private fun refactorAllIds(newId: String){
+        val newList = screenState.value.newAttachedFiles.map{ attachedFile ->
+            attachedFile.copy(
+                noteId = newId
+            )
+        }
+        screenState.update { state ->
+            state.copy(
+                newAttachedFiles = newList
+            )
+        }
+    }
+
     suspend fun getNoteByIdInternal(noteId: String){
 
         changeIsLoading(true)
 
         val returnedNote = getNoteByIdUseCase.invoke(noteId)
-
-        changeIsLoading(false)
 
         if (returnedNote is ExceptionNote){
             screenState.update { state ->
@@ -60,6 +118,8 @@ class DetailsScreenViewModel @Inject constructor(
             updateNoteContentText(returnedNote.content)
             updateNotePriority(returnedNote.priority)
         }
+
+        changeIsLoading(false)
     }
 
     fun changeIsLoading(loading: Boolean){
@@ -105,6 +165,9 @@ class DetailsScreenViewModel @Inject constructor(
         )
         viewModelScope.launch(Dispatchers.IO) {
             addNoteUseCase.invoke(noteToAdd = updatedNote)
+            refactorAllIds(updatedNote.noteId)
+            Log.d("NEW ATTACHED SIZE =", "final = ${screenState.value.newAttachedFiles.size}")
+            addAttachedFilesUseCase.invoke(screenState.value.newAttachedFiles)
             getNoteByIdInternal(screenState.value.userNote?.noteId.toString())
         }
         actionOnRefactoringButton()
