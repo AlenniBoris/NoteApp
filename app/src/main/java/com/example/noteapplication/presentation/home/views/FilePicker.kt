@@ -42,7 +42,7 @@ fun FilePicker(
 
     IconButton(
         modifier = Modifier
-            .padding(start = 10.dp)
+            .padding(start = 10.dp, end = 10.dp)
             .background(Color.Blue.copy(alpha = 0.3f), CircleShape),
         onClick = {
             pickerFileLauncher.launch(arrayOf("*/*"))

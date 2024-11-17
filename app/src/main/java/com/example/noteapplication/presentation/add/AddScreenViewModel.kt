@@ -57,7 +57,9 @@ class AddScreenViewModel @Inject constructor(
         )
         screenState.update { state ->
             state.copy(
-                attachedFilesList = state.attachedFilesList + newFile
+                attachedFilesList =
+                if(!state.attachedFilesList.contains(newFile)) state.attachedFilesList + newFile
+                else state.attachedFilesList
             )
         }
     }

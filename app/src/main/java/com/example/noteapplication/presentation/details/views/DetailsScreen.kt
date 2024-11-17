@@ -100,7 +100,7 @@ fun DetailsScreen(
                 if (!state.isRefactoring) {
                     Text(
                         modifier = Modifier
-                            .padding(bottom = 15.dp)
+                            .padding(vertical = 30.dp)
                             .fillMaxWidth(),
                         text = state.userNote?.title.toString(),
                         fontWeight = FontWeight.ExtraBold,

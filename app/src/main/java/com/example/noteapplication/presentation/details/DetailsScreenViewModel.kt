@@ -25,7 +25,6 @@ import javax.inject.Inject
 class DetailsScreenViewModel @Inject constructor(
     private val getNoteByIdUseCase: GetNoteByIdUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
-    private val addNoteUseCase: AddNoteUseCase,
     private val updateNoteUseCase: UpdateNoteUseCase,
     private val getAttachedFilesUseCase: GetAttachedFilesUseCase,
     private val updateAttachedFilesUseCase: UpdateAttachedFilesUseCase
@@ -70,28 +69,16 @@ class DetailsScreenViewModel @Inject constructor(
             filePath = filePath,
             fileName = fileName
         )
-        val newList = screenState.value.newAttachedFiles.toMutableList() + newFile
-        Log.d("NEW ATTACHED SIZE =", "add = ${screenState.value.newAttachedFiles.size}")
+        val newList =
+            if(!screenState.value.attachedFiles.contains(newFile))
+                screenState.value.newAttachedFiles + newFile
+            else screenState.value.newAttachedFiles
         updateNoteAttachedFiles(newList)
     }
 
     fun removeAttachedFile(attachedFile: AttachedFile){
         val newList = screenState.value.newAttachedFiles.toMutableList() - attachedFile
-        Log.d("NEW ATTACHED SIZE =", "remove = ${screenState.value.newAttachedFiles.size}")
         updateNoteAttachedFiles(newList)
-    }
-
-    private fun refactorAllIds(newId: String){
-        val newList = screenState.value.newAttachedFiles.map{ attachedFile ->
-            attachedFile.copy(
-                noteId = newId
-            )
-        }
-        screenState.update { state ->
-            state.copy(
-                newAttachedFiles = newList
-            )
-        }
     }
 
     suspend fun getNoteByIdInternal(noteId: String){
@@ -169,7 +156,6 @@ class DetailsScreenViewModel @Inject constructor(
         val newAttachedFiles = screenState.value.newAttachedFiles
 
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d("UPDATE_NOTE", "Updating noteId VM= ${updatedNote.noteId}")
             updateNoteUseCase.invoke(updatedNote)
             updateAttachedFilesUseCase.invoke(updatedNote.noteId, newAttachedFiles)
 

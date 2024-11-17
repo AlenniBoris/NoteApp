@@ -23,7 +23,7 @@ import com.example.noteapplication.domain.model.AttachedFile
 fun FileCard(
     attachedFile: AttachedFile,
     onDetachBtnClicked: () -> Unit,
-    isInRefactoringMode: Boolean
+    isInRefactoringMode: Boolean,
 ){
     Box(
         modifier = Modifier
