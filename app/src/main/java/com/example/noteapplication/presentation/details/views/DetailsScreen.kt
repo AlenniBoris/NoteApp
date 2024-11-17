@@ -37,11 +37,11 @@ fun DetailsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getNoteById(noteId)
+        if (!state.someErrorHappened){
+            viewModel.getAllAttachedFiles(noteId)
+        }
     }
 
-    if (!state.someErrorHappened){
-        viewModel.getAllAttachedFiles(noteId)
-    }
 
     Column(
         modifier = Modifier.fillMaxSize()

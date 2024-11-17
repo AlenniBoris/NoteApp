@@ -12,7 +12,6 @@ data class DetailsScreenState(
     val newNoteTitle: String = "",
     val newNoteContent: String = "",
     val newNotePriority: Int = 0,
-
     val attachedFiles: List<AttachedFile> = emptyList(),
     val newAttachedFiles: List<AttachedFile> = emptyList()
 )

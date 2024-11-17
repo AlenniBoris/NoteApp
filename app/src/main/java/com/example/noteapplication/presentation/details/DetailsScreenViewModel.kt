@@ -12,6 +12,7 @@ import com.example.noteapplication.domain.usecase.AddNoteUseCase
 import com.example.noteapplication.domain.usecase.DeleteNoteUseCase
 import com.example.noteapplication.domain.usecase.GetAttachedFilesUseCase
 import com.example.noteapplication.domain.usecase.GetNoteByIdUseCase
+import com.example.noteapplication.domain.usecase.UpdateAttachedFilesUseCase
 import com.example.noteapplication.domain.usecase.UpdateNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,8 +26,9 @@ class DetailsScreenViewModel @Inject constructor(
     private val getNoteByIdUseCase: GetNoteByIdUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val addNoteUseCase: AddNoteUseCase,
+    private val updateNoteUseCase: UpdateNoteUseCase,
     private val getAttachedFilesUseCase: GetAttachedFilesUseCase,
-    private val addAttachedFilesUseCase: AddAttachedFilesUseCase
+    private val updateAttachedFilesUseCase: UpdateAttachedFilesUseCase
 ) : ViewModel() {
 
     val screenState = MutableStateFlow(DetailsScreenState())
@@ -163,12 +165,16 @@ class DetailsScreenViewModel @Inject constructor(
             contentPreview = contentPreview,
             isPinned = false
         )
+
+        val newAttachedFiles = screenState.value.newAttachedFiles
+
         viewModelScope.launch(Dispatchers.IO) {
-            addNoteUseCase.invoke(noteToAdd = updatedNote)
-            refactorAllIds(updatedNote.noteId)
-            Log.d("NEW ATTACHED SIZE =", "final = ${screenState.value.newAttachedFiles.size}")
-            addAttachedFilesUseCase.invoke(screenState.value.newAttachedFiles)
+            Log.d("UPDATE_NOTE", "Updating noteId VM= ${updatedNote.noteId}")
+            updateNoteUseCase.invoke(updatedNote)
+            updateAttachedFilesUseCase.invoke(updatedNote.noteId, newAttachedFiles)
+
             getNoteByIdInternal(screenState.value.userNote?.noteId.toString())
+            getAttachedFilesInternal(screenState.value.userNote?.noteId.toString())
         }
         actionOnRefactoringButton()
     }
