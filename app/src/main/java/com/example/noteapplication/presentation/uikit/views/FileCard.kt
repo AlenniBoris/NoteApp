@@ -1,6 +1,7 @@
 package com.example.noteapplication.presentation.uikit.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ fun FileCard(
     attachedFile: AttachedFile,
     onDetachBtnClicked: () -> Unit,
     isInRefactoringMode: Boolean,
+    onClick: () -> Unit
 ){
     Box(
         modifier = Modifier
@@ -31,6 +33,7 @@ fun FileCard(
             .width(90.dp)
             .fillMaxHeight()
             .background(Color.Blue.copy(alpha = 0.3f), RoundedCornerShape(15))
+            .clickable { onClick() }
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),

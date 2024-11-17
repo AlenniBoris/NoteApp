@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +26,7 @@ import androidx.navigation.NavHostController
 import com.example.noteapplication.presentation.details.DetailsScreenViewModel
 import com.example.noteapplication.presentation.uikit.views.AppTopBar
 import com.example.noteapplication.presentation.uikit.views.AttachedFilesRow
+import com.example.noteapplication.utils.OpenFilesFun
 
 @Composable
 fun DetailsScreen(
@@ -34,6 +36,7 @@ fun DetailsScreen(
 ){
 
     val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.getNoteById(noteId)
@@ -140,6 +143,9 @@ fun DetailsScreen(
                     },
                     onAttachAction = { filePath, fileName ->
                         viewModel.addAttachedFile(filePath, fileName)
+                    },
+                    onFileClicked = { path ->
+                        OpenFilesFun.invoke(context, path)
                     }
                 )
 

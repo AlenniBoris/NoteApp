@@ -25,7 +25,8 @@ fun AttachedFilesRow(
     attachedFilesList: List<AttachedFile>,
     onDetachAction: (AttachedFile) -> Unit = {},
     onAttachAction: (String, String) -> Unit = {_,_ ->},
-    isInRefactoringMode: Boolean = false
+    isInRefactoringMode: Boolean = false,
+    onFileClicked: (String) -> Unit
 ){
 
     Row(
@@ -45,7 +46,10 @@ fun AttachedFilesRow(
                 FileCard(
                     attachedFile = attachedFile,
                     onDetachBtnClicked = { onDetachAction(attachedFile) },
-                    isInRefactoringMode = isInRefactoringMode
+                    isInRefactoringMode = isInRefactoringMode,
+                    onClick = {
+                        onFileClicked(attachedFile.filePath)
+                    }
                 )
             }
         }

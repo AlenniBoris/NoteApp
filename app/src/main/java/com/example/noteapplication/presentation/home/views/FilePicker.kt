@@ -24,18 +24,20 @@ fun FilePicker(
     val context = LocalContext.current
 
     val pickerFileLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument(),
-        onResult = { uri ->
-            if (uri != null) {
-                val fileName = context.contentResolver.query(
-                    uri, null, null, null, null
-                )?.use { cursor ->
-                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    cursor.moveToFirst()
-                    cursor.getString(nameIndex)
-                }
+        contract = ActivityResultContracts.OpenMultipleDocuments(),
+        onResult = { uris ->
+            if(uris.isNotEmpty()){
+                uris.forEach { uri ->
+                    val fileName = context.contentResolver.query(
+                        uri, null, null, null, null
+                    )?.use { cursor ->
+                        val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                        cursor.moveToFirst()
+                        cursor.getString(nameIndex)
+                    }
 
-                onFilePicked(uri.toString(), fileName ?: "Unknown")
+                    onFilePicked(uri.toString(), fileName ?: "Unknown")
+                }
             }
         }
     )
