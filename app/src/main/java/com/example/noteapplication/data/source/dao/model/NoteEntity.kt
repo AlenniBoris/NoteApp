@@ -16,6 +16,4 @@ data class NoteEntity(
     val content: String,
     val contentPreview: String,
     val isPinned: Boolean
-){
-
-}
+)

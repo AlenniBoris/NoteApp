@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.noteapplication.domain.model.AttachedFile
 import com.example.noteapplication.domain.usecase.AddNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,12 +13,14 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 import com.example.noteapplication.domain.model.Note
+import com.example.noteapplication.domain.usecase.AddAttachedFilesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class AddScreenViewModel @Inject constructor(
-    private val addNoteUseCase: AddNoteUseCase
+    private val addNoteUseCase: AddNoteUseCase,
+    private val addAttachedFilesUseCase: AddAttachedFilesUseCase
 ): ViewModel(){
 
     val screenState = MutableStateFlow(AddScreenState())
@@ -46,6 +49,29 @@ class AddScreenViewModel @Inject constructor(
         }
     }
 
+    fun addAttachedFile(filePath: String, fileName: String){
+        val newFile = AttachedFile(
+            noteId = "",
+            filePath = filePath,
+            fileName = fileName
+        )
+        screenState.update { state ->
+            state.copy(
+                attachedFilesList =
+                if(!state.attachedFilesList.contains(newFile)) state.attachedFilesList + newFile
+                else state.attachedFilesList
+            )
+        }
+    }
+
+    fun removeAttachedFile(attachedFile: AttachedFile){
+        screenState.update { state ->
+            state.copy(
+                attachedFilesList = state.attachedFilesList - attachedFile
+            )
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun addNewNote(){
         val currentTime = LocalDateTime.now().toString()
@@ -61,6 +87,21 @@ class AddScreenViewModel @Inject constructor(
         )
         viewModelScope.launch(Dispatchers.IO) {
             addNoteUseCase.invoke(noteToAdd)
+            refactorAllIds(noteToAdd.noteId)
+            addAttachedFilesUseCase.invoke(screenState.value.attachedFilesList)
+        }
+    }
+
+    private fun refactorAllIds(newId: String){
+        val newList = screenState.value.attachedFilesList.map{ attachedFile ->
+            attachedFile.copy(
+                noteId = newId
+            )
+        }
+        screenState.update { state ->
+            state.copy(
+                attachedFilesList = newList
+            )
         }
     }
 

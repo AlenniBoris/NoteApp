@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.noteapplication.data.source.dao.model.AttachedFileEntity
 import com.example.noteapplication.data.source.dao.model.NoteEntity
 
 @Dao
@@ -28,5 +29,18 @@ interface NotesDatabaseDao {
 
     @Query("DELETE FROM `notes-database`")
     suspend fun deleteAllNotes()
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addAttachedFile(fileEntity: AttachedFileEntity)
+
+    @Query("SELECT * FROM attached_files WHERE noteId = :noteId")
+    suspend fun getAttachedFilesForNote(noteId: String): List<AttachedFileEntity>
+
+    @Delete
+    suspend fun deleteAttachedFile(fileEntity: AttachedFileEntity)
+
+    @Query("DELETE FROM attached_files WHERE noteId = :noteId")
+    suspend fun deleteAllAttachedFilesForNote(noteId: String)
 
 }

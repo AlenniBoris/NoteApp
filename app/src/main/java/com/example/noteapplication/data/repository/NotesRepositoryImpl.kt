@@ -1,9 +1,12 @@
 package com.example.noteapplication.data.repository
 
 import android.util.Log
+import com.example.noteapplication.data.mappers.asAttachedFile
+import com.example.noteapplication.data.mappers.asAttachedFileEntity
 import com.example.noteapplication.data.mappers.asNote
 import com.example.noteapplication.data.mappers.asNoteEntity
 import com.example.noteapplication.data.source.dao.database.NotesDatabase
+import com.example.noteapplication.domain.model.AttachedFile
 import com.example.noteapplication.domain.model.ExceptionNote
 import com.example.noteapplication.domain.model.GeneralNote
 import com.example.noteapplication.domain.model.Note
@@ -52,4 +55,19 @@ class NotesRepositoryImpl @Inject constructor(
         database.dao.deleteAllNotes()
     }
 
+    override suspend fun addAttachedFile(attachedFile: AttachedFile) {
+        database.dao.addAttachedFile(attachedFile.asAttachedFileEntity())
+    }
+
+    override suspend fun getAttachedFilesForNote(noteId: String): List<AttachedFile> {
+        return database.dao.getAttachedFilesForNote(noteId).map { it.asAttachedFile() }
+    }
+
+    override suspend fun deleteAttachedFile(attachedFile: AttachedFile) {
+        database.dao.deleteAttachedFile(attachedFile.asAttachedFileEntity())
+    }
+
+    override suspend fun deleteAllAttachedFilesForNote(noteId: String) {
+        database.dao.deleteAllAttachedFilesForNote(noteId)
+    }
 }

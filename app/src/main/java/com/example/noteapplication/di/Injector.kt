@@ -2,6 +2,8 @@ package com.example.noteapplication.di
 
 import android.app.Application
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.noteapplication.data.source.dao.database.NotesDatabase
 import dagger.Module
 import dagger.Provides

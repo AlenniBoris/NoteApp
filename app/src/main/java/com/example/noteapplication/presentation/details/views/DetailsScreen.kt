@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -17,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,18 +25,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.noteapplication.presentation.details.DetailsScreenViewModel
 import com.example.noteapplication.presentation.uikit.views.AppTopBar
+import com.example.noteapplication.presentation.uikit.views.AttachedFilesRow
+import com.example.noteapplication.utils.OpenFilesFun
 
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
-    id: String,
+    noteId: String,
     viewModel: DetailsScreenViewModel = hiltViewModel()
 ){
 
     val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.getNoteById(id)
+        viewModel.getNoteById(noteId)
+        if (!state.someErrorHappened){
+            viewModel.getAllAttachedFiles(noteId)
+        }
     }
 
 
@@ -97,7 +103,7 @@ fun DetailsScreen(
                 if (!state.isRefactoring) {
                     Text(
                         modifier = Modifier
-                            .padding(bottom = 15.dp)
+                            .padding(vertical = 30.dp)
                             .fillMaxWidth(),
                         text = state.userNote?.title.toString(),
                         fontWeight = FontWeight.ExtraBold,
@@ -126,6 +132,22 @@ fun DetailsScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
+
+                AttachedFilesRow(
+                    attachedFilesList =
+                        if (state.isRefactoring) state.newAttachedFiles
+                        else state.attachedFiles,
+                    isInRefactoringMode = state.isRefactoring,
+                    onDetachAction = { attachedFile ->
+                        viewModel.removeAttachedFile(attachedFile)
+                    },
+                    onAttachAction = { filePath, fileName ->
+                        viewModel.addAttachedFile(filePath, fileName)
+                    },
+                    onFileClicked = { path ->
+                        OpenFilesFun.invoke(context, path)
+                    }
+                )
 
             }
         }
